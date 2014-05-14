@@ -213,8 +213,6 @@ assign display = reg_q;
 
 always_comb
 begin
-	SRAM_D = 16'bZ;
-
 	if (~KEY[2])
 	begin
 		load_mar = 1'b0;
@@ -226,8 +224,6 @@ begin
 		load_mar = SW[9] & ~KEY[3];
 		load_mdr = ~SW[9] & ~KEY[3];
 		reg_d = SW[8] ? { SW[7:0], reg_q[7:0] } : { reg_q[15:8], SW[7:0] };
-		if (~KEY[1])
-			SRAM_D = mdr_q;
 	end
 end
 
@@ -238,6 +234,7 @@ assign SRAM_OE_n = 1'b0;
 assign SRAM_UB_n = 1'b0;
 assign SRAM_LB_n = 1'b0;
 assign SRAM_WE_n = KEY[1];
+assign SRAM_D = SRAM_WE_n ? 'hZ : mdr_q;
 
 assign SRAM_A = { 2'b00, mar_q };
 
