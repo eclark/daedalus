@@ -528,4 +528,6 @@ set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id testbench_tr
 set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "1 us" -section_id testbench_triangle
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME testbench_triangle -section_id testbench_triangle
 set_global_assignment -name EDA_TEST_BENCH_FILE testbench_triangle.sv -section_id testbench_triangle
+set_global_assignment -name SYSTEMVERILOG_FILE shifter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ram.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

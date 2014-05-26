@@ -64,15 +64,6 @@ module daedalus(
 	UART_RX,
 	UART_TX,
 
-	//////////// SRAM //////////
-	SRAM_A,
-	SRAM_CE_n,
-	SRAM_D,
-	SRAM_LB_n,
-	SRAM_OE_n,
-	SRAM_UB_n,
-	SRAM_WE_n,
-
 `ifdef ENABLE_LPDDR2
 	//////////// LPDDR2 //////////
 	DDR2LP_CA,
@@ -84,8 +75,17 @@ module daedalus(
 	DDR2LP_DQ,
 	DDR2LP_DQS_n,
 	DDR2LP_DQS_p,
-	DDR2LP_OCT_RZQ
-`endif	
+	DDR2LP_OCT_RZQ,
+`endif
+
+	//////////// SRAM //////////
+	SRAM_A,
+	SRAM_CE_n,
+	SRAM_D,
+	SRAM_LB_n,
+	SRAM_OE_n,
+	SRAM_UB_n,
+	SRAM_WE_n
 );
 
 //=======================================================
@@ -183,19 +183,16 @@ input 		          		DDR2LP_OCT_RZQ;
 //  REG/WIRE declarations
 //=======================================================
 
-wire clock, resetn;
+wire clock, reset_n;
 wire [15:0] display;
 wire display_enable;
-
-wire load_mar, load_mdr;
-wire [15:0] reg_d, reg_q, mar_q, mdr_q;
 
 //=======================================================
 //  Structural coding
 //=======================================================
 
 assign clock = CLOCK_50_B5B;
-assign resetn = CPU_RESET_n;
+assign reset_n = CPU_RESET_n;
 assign display_enable = 1'b1;
 
 // Hex display
@@ -204,38 +201,11 @@ hex_driver hex1 (.enable(display_enable), .in(display[7:4]), .out(HEX1));
 hex_driver hex2 (.enable(display_enable), .in(display[11:8]), .out(HEX2));
 hex_driver hex3 (.enable(display_enable), .in(display[15:12]), .out(HEX3));
 
-// Registers
-reg16 mar (.clock, .resetn, .load(load_mar), .d(reg_d), .q(mar_q));
-reg16 mdr (.clock, .resetn, .load(load_mdr), .d(reg_d), .q(mdr_q));
-
-assign reg_q = SW[9] ? mar_q : mdr_q;
-assign display = reg_q;
-
-always_comb
-begin
-	if (~KEY[2])
-	begin
-		load_mar = 1'b0;
-		load_mdr = 1'b1;
-		reg_d = SRAM_D;
-	end
-	else
-	begin
-		load_mar = SW[9] & ~KEY[3];
-		load_mdr = ~SW[9] & ~KEY[3];
-		reg_d = SW[8] ? { SW[7:0], reg_q[7:0] } : { reg_q[15:8], SW[7:0] };
-	end
-end
-
-// Drive SRAM signals
-
-assign SRAM_CE_n = 1'b0;
-assign SRAM_OE_n = 1'b0;
-assign SRAM_UB_n = 1'b0;
-assign SRAM_LB_n = 1'b0;
-assign SRAM_WE_n = KEY[1];
-assign SRAM_D = SRAM_WE_n ? 'hZ : mdr_q;
-
-assign SRAM_A = { 2'b00, mar_q };
+ram r0 (
+	.clock, .reset_n, .reg_load_ub(~KEY[3] & SW[8]), .reg_load_lb(~KEY[3] & ~SW[8]), .reg_sel(SW[9]),
+	.read(~KEY[2]), .write(~KEY[1]), .reg_d({SW[7:0], SW[7:0]}), .reg_q(display),
+	.ram_ce_n(SRAM_CE_n), .ram_oe_n(SRAM_OE_n), .ram_ub_n(SRAM_UB_n), .ram_lb_n(SRAM_LB_n),
+	.ram_we_n(SRAM_WE_n), .ram_a(SRAM_A), .ram_d(SRAM_D)
+);
 
 endmodule
