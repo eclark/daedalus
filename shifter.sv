@@ -19,17 +19,18 @@ module shifter (
 	input  logic [3:0] n
 );
 
-wire [3:0] k;
-wire [30:0] z;
+logic [3:0] k;
+logic [30:0] z;
 
 always_comb
 begin
 	unique case (mode)
 		3'b000, 3'b100, 3'b001 : z = { 15'd0, in };
-		3'b010, 3'b110 : z = { {15{in[15]}}, in };
+		3'b010 : z = { {15{in[15]}}, in };
 		3'b011 : z = { in[14:0], in };
-		3'b101 : z = { in, 15'd0 };
+		3'b101, 3'b110 : z = { in, 15'd0 };
 		3'b111 : z = { in, in[15:1] };
+		default : z = 'X;
 	endcase
 end
 
@@ -39,6 +40,7 @@ begin
 		3'b000, 3'b100 : k = 4'd0;
 		3'b001, 3'b010, 3'b011 : k = n;
 		3'b101, 3'b110, 3'b111 : k = ~n;
+		default : k = 'X;
 	endcase
 end
 
@@ -61,6 +63,7 @@ begin
 		4'hD : out = z[28:13];
 		4'hE : out = z[29:14];
 		4'hF : out = z[30:15];
+		default : out = 'X;
 	endcase
 end
 

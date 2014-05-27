@@ -11,8 +11,8 @@ module ram (
 	inout logic [15:0] ram_d
 );
 
-wire load_mar, load_mdr;
-wire [15:0] r_d, r_q, mar_q, mdr_q, regmask, masked_d;
+logic load_mar, load_mdr;
+logic [15:0] r_d, r_q, mar_q, mdr_q, regmask, masked_d;
 
 // Registers
 reg16 mar (.clock, .resetn(reset_n), .load(load_mar), .d(r_d), .q(mar_q));

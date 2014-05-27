@@ -1,7 +1,7 @@
 module testbench_triangle ();
 
 timeunit 10ns;
-timeprecision 1ns;
+timeprecision 10ps;
 
 logic clock = 0, resetn = 0;
 logic holdn = 0;

@@ -513,7 +513,7 @@ set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim-Altera (SystemVerilog)
 set_global_assignment -name EDA_TIME_SCALE "1 ns" -section_id eda_simulation
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH testbench_triangle -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH testbench_shifter -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME testbench_edgedetect -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id testbench_edgedetect
 set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "1 us" -section_id testbench_edgedetect
@@ -522,12 +522,22 @@ set_global_assignment -name SYSTEMVERILOG_FILE pwm.sv
 set_global_assignment -name SYSTEMVERILOG_FILE counter.sv
 set_global_assignment -name SYSTEMVERILOG_FILE triangle.sv
 set_global_assignment -name SYSTEMVERILOG_FILE testbench_triangle.sv
-set_global_assignment -name EDA_TEST_BENCH_FILE testbench_edgedetect.sv -section_id testbench_edgedetect
 set_global_assignment -name EDA_TEST_BENCH_NAME testbench_triangle -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id testbench_triangle
 set_global_assignment -name EDA_TEST_BENCH_RUN_SIM_FOR "1 us" -section_id testbench_triangle
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME testbench_triangle -section_id testbench_triangle
-set_global_assignment -name EDA_TEST_BENCH_FILE testbench_triangle.sv -section_id testbench_triangle
 set_global_assignment -name SYSTEMVERILOG_FILE shifter.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ram.sv
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_instance_assignment -name SYNCHRONOUS_GROUP 1 -to HEX3
+set_instance_assignment -name SYNCHRONOUS_GROUP 1 -to HEX2
+set_instance_assignment -name SYNCHRONOUS_GROUP 1 -to HEX1
+set_instance_assignment -name SYNCHRONOUS_GROUP 1 -to HEX0
+set_global_assignment -name SYSTEMVERILOG_FILE testbench_shifter.sv
+set_global_assignment -name EDA_TEST_BENCH_FILE testbench_edgedetect.sv -section_id testbench_edgedetect
+set_global_assignment -name EDA_TEST_BENCH_FILE testbench_triangle.sv -section_id testbench_triangle
+set_global_assignment -name EDA_TEST_BENCH_NAME testbench_shifter -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id testbench_shifter
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME testbench_shifter -section_id testbench_shifter
+set_global_assignment -name EDA_TEST_BENCH_FILE testbench_shifter.sv -section_id testbench_shifter
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

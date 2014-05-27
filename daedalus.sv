@@ -208,4 +208,6 @@ ram r0 (
 	.ram_we_n(SRAM_WE_n), .ram_a(SRAM_A), .ram_d(SRAM_D)
 );
 
+shifter x(.in(display), .out({ LEDR[7:0], LEDG[7:0] }), .mode(KEY[2:0]), .n(SW[3:0]));
+
 endmodule
