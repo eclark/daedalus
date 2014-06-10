@@ -1,3 +1,5 @@
+import defs::*;
+
 module testbench_shifter ();
 
 timeunit 100ps;
@@ -13,45 +15,48 @@ int errcount = 0;
 
 initial
 begin
-	int r = $random;
+	int r;
 
-	n = r[3:0];
-	r = $random;
-	in = r[15:0];
-
-	in[15] = 1'b1;
+	for (int i = 0; i < 5; i++)
+	begin
+		#1
+		r = $random;
+		n = r[3:0];
+		r = $random;
+		in = r[15:0];
+		
+		mode = 3'b000;
+		expected = in;
+		#1 if (out != expected) errcount++;
 	
-	#1 mode = 3'b000;
-	expected = in;
-	#1 if (out != expected) errcount++;
-
-	#1 mode = 3'b001;
-	expected = (in >> n);
-	#1 if (out != expected) errcount++;
-
-	#1 mode = 3'b010;
-	expected = ($signed(in) >>> n);
-	#1 if (out != expected) errcount++;
+		#1 mode = 3'b001;
+		expected = (in >> n);
+		#1 if (out != expected) errcount++;
 	
-	#1 mode = 3'b011;
-	expected = ror(in, n);
-	#1 if (out != expected) errcount++;
-
-	#1 mode = 3'b100;
-	expected = in;
-	#1 if (out != expected) errcount++;
-
-	#1 mode = 3'b101;
-	expected = (in << n);
-	#1 if (out != expected) errcount++;
-
-	#1 mode = 3'b110;
-	expected = (in << n);
-	#1 if (out != expected) errcount++;
+		#1 mode = 3'b010;
+		expected = (signed'(in) >>> n);
+		#1 if (out != expected) errcount++;
+		
+		#1 mode = 3'b011;
+		expected = ror(in, n);
+		#1 if (out != expected) errcount++;
 	
-	#1 mode = 3'b111;
-	expected = rol(in, n);
-	#1 if (out != expected) errcount++;
+		#1 mode = 3'b100;
+		expected = in;
+		#1 if (out != expected) errcount++;
+	
+		#1 mode = 3'b101;
+		expected = (in << n);
+		#1 if (out != expected) errcount++;
+	
+		#1 mode = 3'b110;
+		expected = (in << n);
+		#1 if (out != expected) errcount++;
+		
+		#1 mode = 3'b111;
+		expected = rol(in, n);
+		#1 if (out != expected) errcount++;
+	end
 	
 	#2
 	$display("Done at time %g", $time);
